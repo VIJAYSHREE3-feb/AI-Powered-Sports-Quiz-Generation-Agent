@@ -1,8 +1,14 @@
-# --- SQLite fix for some Linux/Windows environments (see Troubleshooting) ---
-# Uncomment the 3 lines below ONLY if you hit a sqlite3 version error:
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# --- SQLite fix for cloud/Linux environments (e.g. Streamlit Community Cloud) ---
+# Safe to leave active everywhere: it silently does nothing if pysqlite3 isn't
+# installed (e.g. on your local Mac), and fixes ChromaDB's sqlite3 requirement
+# when deployed to Streamlit Cloud (where pysqlite3-binary IS installed via
+# requirements.txt).
+try:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    pass
 
 import os
 import json
